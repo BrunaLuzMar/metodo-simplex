@@ -36,8 +36,42 @@ def problema_auxiliar(A, b):
 
     return A_aux, c_aux, base, b
 
+def escolher_variavel_base(c, ):
+    # A variável x_k com o maior custo relativo positivo é escolhida para entrar na base
+    temp = 0
+    maior = 0
+    for i in range(len(c)):
+        if c[i] < 0:
+            temp = -1*c[i]
+            if temp > maior:
+                maior = i
+        else:
+            if c[i] > maior:
+                maior = i
+
+    return maior
+
+def solucao_otima(c):
+    for i in c:
+        if c > 0:
+            return False
+    
+    return True
+
 def confere_x(x):
     return all(v >= 0 for v in x) 
+
+def calcula_w(x, c):
+    soma = 0
+    for i in range(len(x)):
+        soma += -1*c[i]*x[i]
+    return soma
+
+def verifica_x(w):
+    if w == 0:
+        return True
+    else:
+        return False
 
 def imprime(n, m, A, c, base, b):
     print("n, m", n, m)
@@ -65,8 +99,6 @@ def imprime(n, m, A, c, base, b):
 # b não pode ser negativo se for, multiplica a linha toda por -1 (incluindo a restrição daquele b_i)
 # ------------------------------------------------
 
-
-
 # ------------------------------------------------
 # Fase 2 do Método simplex
 # ------------------------------------------------
@@ -85,6 +117,7 @@ def main():
 
     x_completo_inicial = [0.0] * (len(A[0]) - len(b)) + b
     print("Solução básica inicial x:", x_completo_inicial)
+    print("w = ", calcula_w(x_completo_inicial, c))
 
     # Fim da Fase 1
 

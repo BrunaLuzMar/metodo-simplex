@@ -22,11 +22,13 @@ def transposta(M):
             C[j][i] = M[i][j]
     return C
 
-def contem_matriz_identidade(A):
+def contem_matriz_identidade(T):
     """
     Verifica se existe uma submatriz identidade dentro de A (n x m).
     Retorna True se sim, False caso contrário.
     """
+    A = [linha[1:-1] for linha in T[1:]]
+    c = T[0][1:-1]
     n = len(A)
     m = len(A[0])
     colunas_identidade = []
@@ -40,14 +42,21 @@ def contem_matriz_identidade(A):
     # Se o número de colunas unitárias for igual ao número de linhas, temos uma identidade
     if len(colunas_identidade) >= n:
         # Checar se cada linha tem exatamente um "1" em posições diferentes
-        linhas_com_1 = set()
+        linhas_usadas = {}
+        base_final = []
         for j in colunas_identidade:
-            for i in range(n):
-                if A[i][j] == 1:
-                    linhas_com_1.add(i)
-                    break
-        if len(linhas_com_1) == n:
-            return colunas_identidade
+            linha_1 = [i for i in range(n) if A[i][j] == 1][0]
+            if linha_1 not in linhas_usadas:
+                linhas_usadas[linha_1] = j
+                base_final.append(j+1)
+            else:
+                if j > n:
+                    coluna_antiga = linhas_usadas[linha_1]
+                    base_final.remove(coluna_antiga+1)
+                    linhas_usadas[linha_1] = j
+                    base_final.append(j+1)
+            if len(base_final) == n:
+                return base_final
 
     return False
 
